@@ -1,27 +1,33 @@
-import math
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
 
-data = [
-    [1,2,'A'],
-    [2,3,'A'],
-    [6,7,'B'],
-    [7,8,'B']
-]
+# Dataset
+X = np.array([[1,2],[2,3],[3,4],
+              [6,7],[7,8],[8,9]])
 
-test = [3,3]
-k = 3
+y = np.array(['A','A','A','B','B','B'])
 
-distances = []
-for row in data:
-    d = math.sqrt((row[0]-test[0])**2 + (row[1]-test[1])**2)
-    distances.append((d, row[2]))
+# Input K
+k = int(input("Enter K: "))
 
-distances.sort()
+# Create KNN model
+model = KNeighborsClassifier(n_neighbors=k,
+                             metric='euclidean')
 
-neighbors = distances[:k]
-votes = {}
+# Train model
+model.fit(X, y)
 
-for d,cls in neighbors:
-    votes[cls] = votes.get(cls,0) + 1
+# Test data
+test = np.array([[4,5]])
 
-prediction = max(votes, key=votes.get)
-print("Predicted Class:", prediction)
+# Prediction
+prediction = model.predict(test)
+
+# Training accuracy
+predicted = model.predict(X)
+accuracy = accuracy_score(y, predicted)
+
+print("Test Data:", test)
+print("Predicted Class:", prediction[0])
+print("Accuracy:", accuracy * 100, "%")
