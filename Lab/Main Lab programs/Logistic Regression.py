@@ -1,33 +1,34 @@
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+import math
 
-# Dataset
-X = np.array([[1],[2],[3],[4],[5],[6]])
-y = np.array([0,0,0,1,1,1])
+X = [1, 2, 3, 4]
+Y = [0, 0, 1, 1]
 
-# Create Logistic Regression model
-model = LogisticRegression()
+w = 0.0
+b = 0.0
+lr = 0.1
 
-# Train model
-model.fit(X, y)
+def sigmoid(z):
+    return 1 / (1 + math.exp(-z))
 
-# Test data
-test = np.array([[2],[4],[5],[6]])
+# training loop
+for epoch in range(200):
+    for i in range(len(X)):
+        z = w * X[i] + b
+        y_pred = sigmoid(z)
+        
+        error = Y[i] - y_pred
+        
+        # update weights
+        w = w + lr * error * X[i]
+        b = b + lr * error
 
-# Sigmoid probability
-probability = model.predict_proba(test)[:,1]
+print("Final weight:", w)
+print("Final bias:", b)
 
-# Classification
-prediction = model.predict(test)
+# prediction
+test = 3
+z = w * test + b
+pred = sigmoid(z)
 
-# Accuracy
-accuracy = accuracy_score(y, model.predict(X))
-
-print("Sigmoid Output:")
-print(np.round(probability, 3))
-
-print("Classification:")
-print(prediction)
-
-print("Accuracy:", accuracy * 100, "%")
+print("Predicted value:", pred)
+print("Class:", round(pred))
